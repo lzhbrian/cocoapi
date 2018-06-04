@@ -203,7 +203,13 @@ class COCOeval:
         if len(gts) == 0 or len(dts) == 0:
             return []
         ious = np.zeros((len(dts), len(gts)))
-        sigmas = np.array([.26, .25, .25, .35, .35, .79, .79, .72, .72, .62,.62, 1.07, 1.07, .87, .87, .89, .89])/10.0
+
+        length = int(len(gts[0]['keypoints']) / 3)
+        if length == 17:
+            sigmas = np.array([.26, .25, .25, .35, .35, .79, .79, .72, .72, .62,.62, 1.07, 1.07, .87, .87, .89, .89])/10.0
+        else:
+            # lzhbrian: add this in order to eval any number of keypoints
+            sigmas = np.ones((length,)) / (len(gts[0]['keypoints']) / 3.0 / 10.0)
         vars = (sigmas * 2)**2
         k = len(sigmas)
         # compute oks between each detection and ground truth object
